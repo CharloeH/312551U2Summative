@@ -1,0 +1,18 @@
+﻿<Window x:Class="_312551U2Summative.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_312551U2Summative"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <StackPanel>
+        <TextBox x:Name="txtbxInput" AcceptsReturn="False" Text="Select Radio Button" Height="20"/>
+        <Button x:Name="btnInfo" Click="ButtonUpdateInfo_Click" Height="25" Content="Update info"/>
+        <RadioButton x:Name="rbFirstName" Content="First Name"/>
+        <RadioButton x:Name="rbLastName" Content="Last Name"/>
+        <RadioButton x:Name="rbBirthday" Content="Birthday"/>
+        <RadioButton x:Name="rbEmail" Content="Email"/>
+        <TextBlock x:Name="lblOutput" Text="" Height="75"/>
+    </StackPanel>
+</Window>
