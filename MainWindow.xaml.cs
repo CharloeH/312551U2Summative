@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+
 namespace _312551U2Summative
 {
     /// <summary>
@@ -31,8 +32,8 @@ namespace _312551U2Summative
         {
             UpdateInfo();
             contact.GetAge();
-            contact.ReadFromFile(tblOutput);
-            
+            tblOutput.Text = contact.age.ToString();
+            contact.WriteToFile();
         }
         public void UpdateInfo()
         {
@@ -46,21 +47,29 @@ namespace _312551U2Summative
             }
             if (((bool)rbEmail.IsChecked) == true)
             {
-                contact.email = txtbxInput.Text;
+                if (((bool)txtbxInput.Text.Contains("@")) == false)
+                    MessageBox.Show("Please enter a valid email (using an '@' sign)");
+
+                else
+                    contact.email = txtbxInput.Text;
+                
             }
-            if(((bool)rbBirthday.IsChecked == true))
+            if (((bool)rbBirthday.IsChecked == true))
             {
-                DateTime.TryParse(txtbxInput.Text, out Contact.birthday);
+                bool isNumber = DateTime.TryParse(txtbxInput.Text, out Contact.birthday);
+                if (isNumber == false)
+                    MessageBox.Show("please enter a valid birthday in YYYY/MM/DD");
+                    
             }
         }
 
-        private void ClearInput_Click (object sender, RoutedEventArgs e)
+        private void ClearInput_Click(object sender, RoutedEventArgs e)
         {
             txtbxInput.Text = null;
         }
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            //contact.WriteToFile();
+            contact.WriteToFile();
         }
     }
     class Contact
@@ -71,47 +80,52 @@ namespace _312551U2Summative
         DateTime currentDate = DateTime.Now;
         public string email;
         public int age;
-        //System.IO.StreamReader sr = new System.IO.StreamReader("contact.txt");
-        
+
         public void ReadFromFile(TextBlock tbl)
         {
-            System.IO.StreamReader sr = new System.IO.StreamReader("contact.txt");
-            string savedInfo = sr.ReadLine();
-            firstName = savedInfo.Substring(0, savedInfo.IndexOf(","));
-            savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-            lastName = savedInfo.Substring(0, savedInfo.IndexOf(","));
-            savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-            int.TryParse(savedInfo.Substring(savedInfo.IndexOf(",") + 1), out age);
-            savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-            email = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-
-            tbl.Text = firstName + lastName + age + email;
-
+            try
+            {
+                System.IO.StreamReader sr = new System.IO.StreamReader("contact.txt");
+                string savedInfo = sr.ReadLine();
+                firstName = savedInfo.Substring(0, savedInfo.IndexOf(","));
+                savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
+                lastName = savedInfo.Substring(0, savedInfo.IndexOf(","));
+                savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
+                int.TryParse(savedInfo.Substring(savedInfo.IndexOf(",") + 1), out age);
+                savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
+                email = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
+                
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         public void WriteToFile()
         {
             System.IO.StreamWriter sw = new System.IO.StreamWriter("contact.txt");
             try
             {
-                sw.WriteLine  (firstName + "," + lastName + "," + age + "," + email);
+                sw.WriteLine(firstName + "," + lastName + "," + age + "," + email);
                 sw.Flush();
                 sw.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                MessageBox.Show(ex.ToString());
             }
         }
         public int GetAge()
         {
             if ((currentDate.DayOfYear - birthday.DayOfYear) < 0)
             {
-                age = (currentDate.Year - birthday.Year -1);
+                age = (currentDate.Year - birthday.Year - 1);
             }
             else
                 age = (currentDate.Year - birthday.Year);
             return age;
         }
-        
+
     }
 }
+
