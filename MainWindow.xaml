@@ -1,18 +1,20 @@
-﻿<Window x:Class="_312551U2Summative.MainWindow"
+<Window x:Class="_312551U2Summative.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_312551U2Summative"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        Closing="MainWindow_Closing">
     <StackPanel>
         <TextBox x:Name="txtbxInput" AcceptsReturn="False" Text="Select Radio Button" Height="20"/>
         <Button x:Name="btnInfo" Click="ButtonUpdateInfo_Click" Height="25" Content="Update info"/>
-        <RadioButton x:Name="rbFirstName" Content="First Name"/>
-        <RadioButton x:Name="rbLastName" Content="Last Name"/>
-        <RadioButton x:Name="rbBirthday" Content="Birthday"/>
-        <RadioButton x:Name="rbEmail" Content="Email"/>
-        <TextBlock x:Name="lblOutput" Text="" Height="75"/>
+        <RadioButton x:Name="rbFirstName" Content="First Name" Click="ClearInput_Click"/>
+        <RadioButton x:Name="rbLastName" Content="Last Name" Click="ClearInput_Click"/>
+        <RadioButton x:Name="rbBirthday" Content="Birthday" Click="ClearInput_Click"/>
+        <RadioButton x:Name="rbEmail" Content="Email" Click="ClearInput_Click"/>
+        <TextBlock x:Name="tblOutput" Height="200">Select a radio button and fill in appropriate field. Then press the update info. 
+            <LineBreak /> First Name: <LineBreak /> Last Name: <LineBreak/> Age: <LineBreak/> Email: </TextBlock>
     </StackPanel>
 </Window>
