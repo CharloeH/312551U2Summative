@@ -21,94 +21,99 @@ namespace _312551U2Summative
     /// </summary>
     public partial class MainWindow : Window
     {
-        Contact contact = new Contact();
+
+        Contact contact;
+        string firstName;
+        string lastName;
+        DateTime birthday;
+        string email;
         public MainWindow()
         {
+            
             InitializeComponent();
-            contact.ReadFromFile(tblOutput);
+            contact = new Contact(firstName, lastName, birthday, email);
+            contact.ReadFromFile();
         }
 
-        private void ButtonUpdateInfo_Click(object sender, RoutedEventArgs e)
+        private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            UpdateInfo();
-            contact.GetAge();
-            tblOutput.Text = contact.age.ToString();
-            contact.WriteToFile();
+            GetInfo();
+            //contact.WriteToFile();
         }
-        public void UpdateInfo()
+        public void GetInfo()
         {
-            if (((bool)rbFirstName.IsChecked) == true)
-            {
-                contact.firstName = txtbxInput.Text;
-            }
-            if (((bool)rbLastName.IsChecked) == true)
-            {
-                contact.lastName = txtbxInput.Text;
-            }
-            if (((bool)rbEmail.IsChecked) == true)
-            {
-                if (((bool)txtbxInput.Text.Contains("@")) == false)
-                    MessageBox.Show("Please enter a valid email (using an '@' sign)");
+            firstName = txtbxFirstName.Text;
 
-                else
-                    contact.email = txtbxInput.Text;
-                
-            }
-            if (((bool)rbBirthday.IsChecked == true))
-            {
-                bool isNumber = DateTime.TryParse(txtbxInput.Text, out Contact.birthday);
-                if (isNumber == false)
-                    MessageBox.Show("please enter a valid birthday in YYYY/MM/DD");
-                    
-            }
+            lastName = txtbxLastName.Text;
+
+            bool isNumber = DateTime.TryParse(txtbxBirthday.Text, out birthday);
+
+            if (isNumber == false)
+                MessageBox.Show("Please enter a birthday in YYYY/MM/DD format.");
+
+            email = txtbxEmail.Text;
+            Console.WriteLine(firstName + lastName + birthday + email);
         }
 
-        private void ClearInput_Click(object sender, RoutedEventArgs e)
-        {
-            txtbxInput.Text = null;
-        }
+        
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            contact.WriteToFile();
+            contact.WriteToFile(firstName, lastName, birthday, email);
+            Console.WriteLine(firstName +  lastName + birthday + email);
+        }
+
+        private void BtnDisplayAge_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
     class Contact
     {
-        public string firstName;
-        public string lastName;
-        public static DateTime birthday = new DateTime();
+        private string _firstName;
+        private string _lastName;
+        private DateTime _birthday;
+        private string _email;
         DateTime currentDate = DateTime.Now;
-        public string email;
         public int age;
-
-        public void ReadFromFile(TextBlock tbl)
+        
+        public Contact(string firstName, string lastName, DateTime birthday, string email)
+        {
+            _firstName = firstName;
+            _lastName = lastName;
+            _birthday = birthday;
+            _email = email;
+        }
+        public void ReadFromFile()
         {
             try
             {
                 System.IO.StreamReader sr = new System.IO.StreamReader("contact.txt");
-                string savedInfo = sr.ReadLine();
-                firstName = savedInfo.Substring(0, savedInfo.IndexOf(","));
-                savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-                lastName = savedInfo.Substring(0, savedInfo.IndexOf(","));
-                savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-                int.TryParse(savedInfo.Substring(savedInfo.IndexOf(",") + 1), out age);
-                savedInfo = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-                email = savedInfo.Substring(savedInfo.IndexOf(",") + 1);
-                
+                string s = sr.ReadLine();
+                _firstName = s.Substring(0, s.IndexOf(","));
+                s = s.Substring(s.IndexOf(",") + 1);
+                _lastName = s.Substring(0, s.IndexOf(","));
+                s = s.Substring(s.IndexOf(",") + 1);
+                int.TryParse(s.Substring(s.IndexOf(",") + 1), out age);
+                s = s.Substring(s.IndexOf(",") + 1);
+                _email = s.Substring(s.IndexOf(",") + 1);
+                sr.Close();
+                Console.WriteLine(_firstName + _lastName + _email + age);
             }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+            
         }
-        public void WriteToFile()
+        public void WriteToFile(string firstName, string lastName, DateTime birthday, string email)
         {
-            System.IO.StreamWriter sw = new System.IO.StreamWriter("contact.txt");
             try
             {
+                System.IO.StreamWriter sw = new System.IO.StreamWriter("contact.txt");
                 sw.WriteLine(firstName + "," + lastName + "," + age + "," + email);
                 sw.Flush();
                 sw.Close();
+                Console.WriteLine(_firstName + _lastName + age + _email);
             }
             catch (Exception ex)
             {
@@ -117,12 +122,12 @@ namespace _312551U2Summative
         }
         public int GetAge()
         {
-            if ((currentDate.DayOfYear - birthday.DayOfYear) < 0)
+            if ((currentDate.DayOfYear - _birthday.DayOfYear) < 0)
             {
-                age = (currentDate.Year - birthday.Year - 1);
+                age = (currentDate.Year - _birthday.Year - 1);
             }
             else
-                age = (currentDate.Year - birthday.Year);
+                age = (currentDate.Year - _birthday.Year);
             return age;
         }
 
