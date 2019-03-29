@@ -13,9 +13,8 @@
         <TextBox x:Name="txtbxLastName" AcceptsReturn="False" Text="Last Name" Height="20"/>
         <TextBox x:Name="txtbxBirthday" AcceptsReturn="False" Text="Birthday" Height="20"/>
         <TextBox x:Name="txtbxEmail" AcceptsReturn="False" Text="Email" Height="20"/>
-        <Button x:Name="btnInfo" Click="ButtonSave_Click" Height="25" Content="Save"/>
-        <Button x:Name="btnDisplayAge" Click="ButtonSave_Click" Height="25" Content="Show Age"/>
+        <Button x:Name="btnDisplayAge" Click="BtnDisplayAge_Click" Height="25" Content="Show Age"/>
 
-        <TextBlock x:Name="tblOutput" Height="200"></TextBlock>
+        <TextBlock x:Name="txtblOutput" Height="200"></TextBlock>
     </StackPanel>
 </Window>
