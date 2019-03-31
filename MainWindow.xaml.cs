@@ -1,6 +1,6 @@
 /*Sebastian Horton
  * Friday March 29th, 2019
- * The user inputs information and can press a "get age" button.
+ * The user inputs a first name, last name, birthday and email. They can press a "get age" button.
  * the program calculates the age and saves the user's input upon closing.
  * */
 using System;
@@ -36,13 +36,13 @@ namespace _312551U2Summative
 
             contact = new Contact();
             ///checks if the user's "contact.txt" file exists, if it doesnt it creates one and adds example info to it
-            if (!File.Exists("contact.txt") )
+            if (!File.Exists("contact.txt"))
             {
 
                 contact.WriteToFile();
                 contact.ReadFromFile(txtbxFirstName, txtbxLastName, txtbxBirthday, txtbxEmail);
             }
-            else 
+            else
                 contact.ReadFromFile(txtbxFirstName, txtbxLastName, txtbxBirthday, txtbxEmail);
         }
 
@@ -61,11 +61,14 @@ namespace _312551U2Summative
     class Contact
     {
         ///declared memeber variables
-        private string _firstName = "Sebastian";
-        private string _lastName = "Horton";
-        private DateTime _birthday = new DateTime(2002, 6, 2);
-        private string _email = "sebastian@hobro.ca";
-        private int age;
+        private string _firstName = "First Name";
+        private string _lastName = "Last Name";
+        private DateTime _birthday = new DateTime(0001, 1, 1);
+        private string _email = "Email@gmail.com";
+        private int _age;
+        private string[] _contactInfo;
+        ///other variables
+        DateTime currentDate = DateTime.Now;
 
         public void getContact(TextBox firstName, TextBox lastName, TextBox birthday, TextBox email, CancelEventArgs e)
         {
@@ -89,7 +92,8 @@ namespace _312551U2Summative
                 cancelClosing(e, mbr);
             }
 
-            if (email.Text.Contains("@")) ///checks for valid a email adress
+            ///checks for valid a email adress
+            if (email.Text.Contains("@") & (email.Text.Contains(".com") || email.Text.Contains(".ca") || email.Text.Contains(".net")))
                 _email = email.Text;
             else
             {
@@ -115,20 +119,10 @@ namespace _312551U2Summative
         {
             try
             {
-                ///taking the stored information from the text file and converting it into variables
-                System.IO.StreamReader sr = new System.IO.StreamReader("contact.txt");
-                string s = sr.ReadLine(); ///temportary string containg all of the information
+                System.IO.StreamReader sr = new System.IO.StreamReader("contact.txt"); ///reading user's information from the text file
+                string s = sr.ReadLine();
 
-                _firstName = s.Substring(0, s.IndexOf(",")); ///adding the firstName to the _firstName private variable
-                s = s.Substring(s.IndexOf(",") + 1); ///removing the firstName information from the string
-
-                _lastName = s.Substring(0, s.IndexOf(",")); ///adding the lastName to the _lastName private variable
-                s = s.Substring(s.IndexOf(",") + 1); ///removing the lastName information from the string
-
-                DateTime.TryParse(s.Substring(0, s.IndexOf(",")), out _birthday); ///adding the birthday to the _birthday private variable
-                s = s.Substring(s.IndexOf(",") + 1); ///removing the birthday information from the string
-
-                _email = s.Substring(s.IndexOf(",") + 1); ///adding the only remaining information (the email) to the _email private variable 
+                _contactInfo = s.Split(',');///splices the information into seperate strings 
 
                 sr.Close();
             }
@@ -136,12 +130,11 @@ namespace _312551U2Summative
             {
                 MessageBox.Show(ex.Message);
             }
-
             ///adding the stored information into the text fields
-            firstName.Text = _firstName;
-            lastName.Text = _lastName;
-            birthday.Text = _birthday.ToShortDateString(); ///converting the _birthday into shortDate to remove the time
-            email.Text = _email;
+            firstName.Text = _contactInfo[0];
+            lastName.Text = _contactInfo[1];
+            birthday.Text = _contactInfo[2]; 
+            email.Text = _contactInfo[3];
         }
 
         public void WriteToFile()
@@ -150,7 +143,7 @@ namespace _312551U2Summative
             {
                 ///writing the user's input information into the text file
                 System.IO.StreamWriter sw = new System.IO.StreamWriter("contact.txt");
-                sw.WriteLine(_firstName + "," + _lastName + "," + _birthday + "," + _email);
+                sw.WriteLine(_firstName + "," + _lastName + "," + _birthday.ToShortDateString() + "," + _email);
                 sw.Flush();
                 sw.Close();
             }
@@ -162,16 +155,16 @@ namespace _312551U2Summative
 
         public void getAge(TextBlock txtbl)
         {
-            DateTime currentDate = DateTime.Now;
+            
             ///checks if the user's birthday has occured yet this year
             if ((currentDate.DayOfYear - _birthday.DayOfYear) < 0) ///if the user's birthday hasn't happened this year before the current date, the difference will be negative
-                age = (currentDate.Year - _birthday.Year) - 1;
+                _age = (currentDate.Year - _birthday.Year) - 1;
             else
-                age = currentDate.Year - _birthday.Year; ///if the user's birthday has happened this year before the current date, the difference will be positive
-            if (age <= 116)
-                txtbl.Text = "Age: " + age.ToString();
+                _age = currentDate.Year - _birthday.Year; ///if the user's birthday has happened this year before the current date, the difference will be positive
+            if (_age <= 116) ///the oldest human being (recorded) is currenty 116 years old.
+                txtbl.Text = "Age: " + _age.ToString();
             else
-                txtbl.Text = "Age: dead";
+                MessageBox.Show("Your age is not valid. Please enter a birthday that is in the last 116 years.");
         }
     }
 }
