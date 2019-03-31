@@ -48,14 +48,14 @@ namespace _312551U2Summative
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            contact.getContact(txtbxFirstName, txtbxLastName, txtbxBirthday, txtbxEmail, e);
+            contact.GetContact(txtbxFirstName, txtbxLastName, txtbxBirthday, txtbxEmail, e);
             contact.WriteToFile();
         }
 
         private void BtnDisplayAge_Click(object sender, RoutedEventArgs e)
         {
-            contact.getBirthday(txtbxBirthday);
-            contact.getAge(txtblOutput);
+            contact.GetBirthday(txtbxBirthday);
+            contact.GetAge(txtblOutput);
         }
     }
     class Contact
@@ -70,7 +70,7 @@ namespace _312551U2Summative
         ///other variables
         DateTime currentDate = DateTime.Now;
 
-        public void getContact(TextBox firstName, TextBox lastName, TextBox birthday, TextBox email, CancelEventArgs e)
+        public void GetContact(TextBox firstName, TextBox lastName, TextBox birthday, TextBox email, CancelEventArgs e)
         {
 
             ///overriding the stored information with the user's input
@@ -82,14 +82,14 @@ namespace _312551U2Summative
             else
             {
                 MessageBoxResult mbr = MessageBox.Show("Your name cannot contain a comma.", "warning", MessageBoxButton.OK);
-                cancelClosing(e, mbr);
+                CancelClosing(e, mbr);
             }
 
             bool isNumber = DateTime.TryParse(birthday.Text, out _birthday); ///checks for a valid birthday in YYYY/MM/DD
             if (isNumber == false)
             {
                 MessageBoxResult mbr = MessageBox.Show("Please enter a birthday in YYYY/MM/DD format.", "warning", MessageBoxButton.OK);
-                cancelClosing(e, mbr);
+                CancelClosing(e, mbr);
             }
 
             ///checks for valid a email adress
@@ -98,17 +98,17 @@ namespace _312551U2Summative
             else
             {
                 MessageBoxResult mbr = MessageBox.Show("Please enter a valid email adress.", "warning", MessageBoxButton.OK);
-                cancelClosing(e, mbr);
+                CancelClosing(e, mbr);
             }
         }
 
-        private static void cancelClosing(CancelEventArgs e, MessageBoxResult mbr)
+        private static void CancelClosing(CancelEventArgs e, MessageBoxResult mbr)
         {
             if (mbr == MessageBoxResult.OK)
                 e.Cancel = true;
         }
 
-        public void getBirthday(TextBox birthday)
+        public void GetBirthday(TextBox birthday)
         {
             bool isNumber = DateTime.TryParse(birthday.Text, out _birthday); ///checks for a valid birthday in YYYY/MM/DD
             if (isNumber == false)
@@ -153,7 +153,7 @@ namespace _312551U2Summative
             }
         }
 
-        public void getAge(TextBlock txtbl)
+        public void GetAge(TextBlock txtbl)
         {
             
             ///checks if the user's birthday has occured yet this year
